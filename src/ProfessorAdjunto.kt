@@ -11,4 +11,8 @@ class ProfessorAdjunto(nome: String, sobrenome: String, codigo: Int,
     }
 
     // metodos especializados se precisar
+
+    override fun toString(): String {
+        return "Professor Adjunto: " + super.toString() + "\nHoras Monitoria: ${horasMonitoria}"
+    }
 }

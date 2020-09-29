@@ -12,4 +12,9 @@ abstract class Professor(nome: String, sobrenome: String, codigo: Int, val dataA
         val hoje = LocalDate.now()
         return(dataAdmissao.until(hoje, ChronoUnit.DAYS))
     }
+
+    override fun toString(): String {
+        return super.toString() +
+                "\nAdmissao: ${dataAdmissao}\nTempo de casa: ${obterTempoCasa()} dias"
+    }
 }

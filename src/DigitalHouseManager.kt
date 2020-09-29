@@ -1,5 +1,8 @@
 package Desafio1
 
+import java.time.DateTimeException
+import java.time.LocalDate
+
 class DigitalHouseManager {
     val alunos = mutableListOf<Aluno>()
     val professores = mutableListOf<Professor>()
@@ -13,7 +16,7 @@ class DigitalHouseManager {
     }
 
     fun excluirCurso(codigo: Int) {
-        val curso = cursos.firstOrNull {
+        val curso = cursos.find {
             it.codigo == codigo
         }
         curso?.let {
@@ -22,11 +25,24 @@ class DigitalHouseManager {
         } ?: run { println("Curso com codigo ${codigo} não encontrado!")}
     }
 
-    fun registrarProfessorAdjunto(nome: String, sobrenome: String, codigo: Int, qtdHorasMonitoria: Int) {
-        val professor = ProfessorAdjunto(nome, sobrenome, codigo, qtdHorasMonitoria)
+    fun registrarProfessorAdjunto(nome: String, sobrenome: String, codigo: Int,
+                                  qtdHorasMonitoria: Int, dataAdmissao: String? = null) {
+        var dataAdmi: LocalDate? = null
+        try {
+            dataAdmi = dataAdmissao?.let { LocalDate.parse(dataAdmissao) }
+        } catch(e: DateTimeException) {
+            println("Data invalida, usando data de hoje")
+        }
+
+        val professor = dataAdmi?.let {
+            ProfessorAdjunto(nome, sobrenome, codigo, dataAdmi, qtdHorasMonitoria)
+        } ?: run { ProfessorAdjunto(nome, sobrenome, codigo, qtdHorasMonitoria) }
+
         professores.add(professor)
         println("Professor ${nome} ${sobrenome} registrado.")
     }
+
+
 
     fun registrarProfessorTitular(nome: String, sobrenome: String, codigo: Int, especialidade: String) {
         val professor = ProfessorTitular(nome, sobrenome, codigo, especialidade)
@@ -35,10 +51,10 @@ class DigitalHouseManager {
     }
 
     fun excluirProfessor(codigo: Int) {
-        professores.firstOrNull {
+        professores.find {
             it.codigo == codigo
         } ?.let { prof ->
-            cursos.firstOrNull{curso ->
+            cursos.find{curso ->
                 curso.professorAdjunto?.codigo == prof.codigo || curso.professorTitular?.codigo == prof.codigo
             } ?.let {curso ->
                 println("Professor ${prof.nome} ${prof.sobrenome} " +
@@ -52,16 +68,22 @@ class DigitalHouseManager {
 
     fun matricularAluno(nome: String, sobrenome: String, codigo: Int) {
         val aluno = Aluno(nome, sobrenome, codigo)
+
+        if (alunos.contains(aluno)) {
+            println("Aluno ${nome} ${sobrenome} não registrado. Código de aluno já usado")
+            return
+        }
+
         alunos.add(aluno)
         println("Aluno ${nome} ${sobrenome} registrado com sucesso")
     }
 
     fun matricularAluno(codAluno: Int, codCurso: Int) {
         // primeiro tenta incluir o aluno no Curso
-        cursos.firstOrNull{curso ->
+        cursos.find{curso ->
             curso.codigo == codCurso
         } ?.let { curso ->
-            alunos.firstOrNull { aluno ->
+            alunos.find { aluno ->
                 aluno.codigo == codAluno
             } ?. let { aluno ->
                 if(curso.addAluno(aluno)) {
@@ -78,10 +100,10 @@ class DigitalHouseManager {
     fun alocarProfessores(codCurso: Int, codProfTitular: Int, codProfAdjunto: Int) {
         var profTitular: ProfessorTitular? = null
         var profAdjunto: ProfessorAdjunto? = null
-        cursos.firstOrNull { curso ->
+        cursos.find { curso ->
             curso.codigo == codCurso
         } ?.let { curso ->
-            professores.firstOrNull{
+            professores.find{
                 it.codigo == codProfTitular
             } ?.let {
                 try {
@@ -95,7 +117,7 @@ class DigitalHouseManager {
                 println("Professor com codigo ${codProfTitular} não encontrado")
             }
 
-            professores.firstOrNull {
+            professores.find {
                 it.codigo == codProfAdjunto
             } ?. let {
                 // nesse usarei o safe typecast, assim não é necessário o tratamento de exceção
@@ -116,5 +138,22 @@ class DigitalHouseManager {
 
         } ?: run { println("Curso com código ${codCurso} não encontrado") }
     }
+
+    // funcoes para apresentar as listas
+    fun printAlunos() {
+        println("\n*** Lista de Alunos ***")
+        alunos.forEach(::println)
+    }
+
+    fun printProfessores() {
+        println("\n*** Lista de Professores ***")
+        professores.forEach(::println)
+    }
+
+    fun printCursos() {
+        println("\n*** Lista de Cursos ***")
+        cursos.forEach(::println)
+    }
+
 
 }

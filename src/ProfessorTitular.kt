@@ -9,4 +9,8 @@ class ProfessorTitular(nome: String, sobrenome: String, codigo: Int,
             this(nome, sobrenome, codigo, LocalDate.now(), especialidade)
 
     // Se precisar, algum metodo especializado da classe
+
+    override fun toString(): String {
+        return "Professor Titular: " + super.toString() + "\nEspecialidade: $especialidade"
+    }
 }

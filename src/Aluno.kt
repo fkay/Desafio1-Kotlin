@@ -9,4 +9,12 @@ class Aluno(nome: String, sobrenome: String, codigo: Int):
         certificados.add(certificado)
     }
 
+    override fun toString(): String {
+        var retorno = "Aluno " + super.toString()
+        certificados.forEach {
+            retorno += "\n\t $it"
+        }
+        return retorno
+    }
+
 }
