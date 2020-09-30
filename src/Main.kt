@@ -5,15 +5,15 @@ fun main() {
 
     val dhManager = DigitalHouseManager()
 
-    dhManager.matricularAluno("Fabricio", "Kassardjian", 123)
-    dhManager.matricularAluno("João", "das Couves", 124)
-    dhManager.matricularAluno("Maria", "das Dores", 123)
-    dhManager.matricularAluno("Maria", "das Dores", 125)
+    dhManager.registrarAluno("Fabricio", "Kassardjian", 123)
+    dhManager.registrarAluno("João", "das Couves", 124)
+    dhManager.registrarAluno("Maria", "das Dores", 123)
+    dhManager.registrarAluno("Maria", "das Dores", 125)
 
     dhManager.printAlunos()
 
     dhManager.registrarProfessorTitular("Ludovico", "Van Strauss", 123, "Fullstack")
-    dhManager.registrarProfessorTitular("Pardal", "Gadget", 124, "Java")
+    dhManager.registrarProfessorTitular("Pardal", "Gadget", 124, "Java", "2020-08-01")
     dhManager.registrarProfessorTitular("Juca", "Bala", 125,"Android/Kotlin")
 
     dhManager.registrarProfessorAdjunto("Huguinho", "Pato", 201, 15)
@@ -35,4 +35,15 @@ fun main() {
 
     dhManager.printProfessores()
 
+    dhManager.matricularAluno(123, 1)
+    dhManager.matricularAluno(124, 1)
+    dhManager.matricularAluno(125, 1)
+
+    dhManager.printCursos()
+
+    dhManager.printMatriculas()
+
+    dhManager.excluirCurso(2)
+
+    dhManager.printCursos()
 }

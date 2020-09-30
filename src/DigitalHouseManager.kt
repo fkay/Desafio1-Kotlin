@@ -2,6 +2,7 @@ package Desafio1
 
 import java.time.DateTimeException
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class DigitalHouseManager {
     val alunos = mutableListOf<Aluno>()
@@ -25,9 +26,11 @@ class DigitalHouseManager {
         } ?: run { println("Curso com codigo ${codigo} não encontrado!")}
     }
 
+    // metodo aceita string da data de admissao como parametro adicional
     fun registrarProfessorAdjunto(nome: String, sobrenome: String, codigo: Int,
                                   qtdHorasMonitoria: Int, dataAdmissao: String? = null) {
         var dataAdmi: LocalDate? = null
+        // exemplo do try catch para pegar excecao de entrada invalida de data
         try {
             dataAdmi = dataAdmissao?.let { LocalDate.parse(dataAdmissao) }
         } catch(e: DateTimeException) {
@@ -44,8 +47,19 @@ class DigitalHouseManager {
 
 
 
-    fun registrarProfessorTitular(nome: String, sobrenome: String, codigo: Int, especialidade: String) {
-        val professor = ProfessorTitular(nome, sobrenome, codigo, especialidade)
+    fun registrarProfessorTitular(nome: String, sobrenome: String, codigo: Int,
+                                  especialidade: String, dataAdmissao: String? = null) {
+        var dataAdmi: LocalDate? = null
+        // exemplo do try catch para pegar excecao de entrada invalida de data
+        try {
+            dataAdmi = dataAdmissao?.let { LocalDate.parse(dataAdmissao) }
+        } catch(e: DateTimeException) {
+            println("Data invalida, usando data de hoje")
+        }
+        val professor = dataAdmi?.let {
+            ProfessorTitular(nome, sobrenome, codigo, dataAdmi, especialidade)
+        } ?: run { ProfessorTitular(nome, sobrenome, codigo, especialidade) }
+
         professores.add(professor)
         println("Professor ${nome} ${sobrenome} registrado.")
     }
@@ -66,7 +80,7 @@ class DigitalHouseManager {
         } ?: run { println("Professor com código ${codigo} não encontrado") }
     }
 
-    fun matricularAluno(nome: String, sobrenome: String, codigo: Int) {
+    fun registrarAluno(nome: String, sobrenome: String, codigo: Int) {
         val aluno = Aluno(nome, sobrenome, codigo)
 
         if (alunos.contains(aluno)) {
@@ -155,5 +169,21 @@ class DigitalHouseManager {
         cursos.forEach(::println)
     }
 
+    fun printMatriculas() {
+        println("\n*** Lista de Matriculas ***")
+        matriculas.forEachIndexed{ index, matricula ->
+            val aluno = alunos.find{
+                it.codigo == matricula.codAluno
+            }
+            val curso = cursos.find{
+                it.codigo == matricula.codCurso
+            }
+            println("Matricula ${index} - ${matricula.data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}")
+            aluno?.let(::println)
+            curso?.let {
+                println("Curso ${it.codigo} - ${it.nome}")
+            }
+        }
+    }
 
 }

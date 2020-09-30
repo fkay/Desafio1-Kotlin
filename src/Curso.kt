@@ -16,7 +16,7 @@ class Curso(val nome: String, val codigo: Int, var maxAlunos: Int) {
         }
 
         alunos.add(aluno)
-        println("Aluno cadastrado")
+        //println("Aluno cadastrado")
         return true
     }
 
@@ -44,8 +44,9 @@ class Curso(val nome: String, val codigo: Int, var maxAlunos: Int) {
         val profTit = professorTitular?.toString() ?: "Sem professor titular alocado"
         val profAdj = professorAdjunto?.toString() ?: "Sem professor adjunto alocado"
         var retorno = "Curso $codigo - $nome\n" + profTit + "\n" + profAdj
+        retorno += "\n ${alunos.size} Alunos:"
         alunos.forEach {
-            retorno += "\n" + it.toString()
+            retorno += "\n  " + it.toString()
         }
         return retorno
     }
