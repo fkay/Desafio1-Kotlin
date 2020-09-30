@@ -140,7 +140,10 @@ class DigitalHouseManager {
                 println("Professor com codigo ${codProfAdjunto} não encontrado")
             }
 
-            profAdjunto?.let {profAdj ->
+            // Usei also, pois o let retorna o resultado do bloco para o elvis, o also retorna o objeto testado
+            // You could use also instead of let. also will return profAdjunto, whereas let will return whatever the lambda returns.
+            // https://stackoverflow.com/questions/53417080/kotlins-let-plus-elvis-and-accidental-null-return-values
+            profAdjunto?.also {profAdj ->
                 profTitular?.let { profTit ->
                     curso.professorAdjunto = profAdj
                     curso.professorTitular = profTit
